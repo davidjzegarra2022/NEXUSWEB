@@ -370,8 +370,8 @@
         /* Updated Products Grid for larger images */
         .products-grid {
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 40px;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); 
+            gap: 32px;
             justify-content: center;
         }
         
@@ -391,9 +391,12 @@
             transform: translateY(-8px);
         }
         .product-img {
+            display: block;
             width: 100%; 
-            height: 450px; /* Fixed height as requested */
-            object-fit: cover;
+            height: auto;
+            aspect-ratio: 4 / 5;
+            object-fit: contain;
+            background: #0b0b0b;
             filter: grayscale(30%); 
             transition: filter 0.4s;
         }
@@ -484,29 +487,93 @@
             background: var(--bg);
         }
         
+        .imports-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 24px;
+        }
         .import-banner-container {
             position: relative;
-            width: 300px;
-            height: 300px;
-            border-radius: 24px;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 20px;
             overflow: hidden;
             border: 1px solid rgba(255,255,255,0.05);
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            margin: 0 auto;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s;
+            background: var(--bg2);
         }
-        
         .import-banner-container:hover {
             transform: translateY(-5px);
             border-color: rgba(200,255,0,0.2);
         }
-
         .import-banner-img {
             width: 100%;
             height: 100%;
             display: block;
-            object-fit: cover;
+            object-fit: contain;
+            transition: transform 0.5s ease;
         }
+        .import-banner-container:hover .import-banner-img { transform: scale(1.04); }
+
+        /* Zoom: imágenes clicables */
+        .product-img, .import-banner-img { cursor: zoom-in; }
+        .zoom-hint {
+            position: absolute; top: 12px; right: 12px; z-index: 5;
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(10,10,10,0.6); color: var(--accent);
+            border: 1px solid rgba(200,255,0,0.3);
+            backdrop-filter: blur(6px); pointer-events: none;
+            opacity: 0.85; transition: opacity 0.3s;
+        }
+        .zoom-hint svg { width: 18px; height: 18px; }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed; inset: 0; z-index: 95000;
+            background: rgba(5,5,5,0.94);
+            backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s;
+            touch-action: none;
+        }
+        .lightbox.open { opacity: 1; visibility: visible; }
+        .lightbox-stage {
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; padding: 64px 16px;
+        }
+        .lightbox-img {
+            max-width: 100%; max-height: 100%;
+            object-fit: contain; border-radius: 12px;
+            transform: scale(0.85);
+            transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: zoom-in; user-select: none; -webkit-user-drag: none;
+        }
+        .lightbox.open .lightbox-img { transform: scale(1); }
+        .lightbox.zoomed .lightbox-img { cursor: zoom-out; transition: transform 0.2s ease; }
+        .lightbox-btn {
+            position: absolute; z-index: 2;
+            width: 48px; height: 48px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(20,20,20,0.8); color: #fff;
+            border: 1px solid rgba(200,255,0,0.35);
+            font-size: 22px; line-height: 1; cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .lightbox-btn:hover { background: var(--accent); color: #000; }
+        .lightbox-close { top: 16px; right: 16px; }
+        .lightbox-prev { left: 16px; top: 50%; transform: translateY(-50%); }
+        .lightbox-next { right: 16px; top: 50%; transform: translateY(-50%); }
+        .lightbox-count {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            font-family: 'Space Grotesk', sans-serif; font-size: 13px;
+            letter-spacing: 2px; color: rgba(255,255,255,0.6);
+        }
+        body.lb-open { overflow: hidden; }
+        body.lb-open .whatsapp-float, body.lb-open .scroll-to-top-btn { opacity: 0; pointer-events: none; }
 
         .testimonial-section {
             padding: 160px 48px; text-align: center; position: relative;
@@ -773,8 +840,15 @@
             .stats-section { grid-template-columns: 1fr 1fr; }
             .process-grid { grid-template-columns: 1fr 1fr; }
             .footer-grid { grid-template-columns: 1fr 1fr; }
+            .imports-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
         }
         @media (max-width: 768px) {
+            .imports-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+            .import-banner-container { border-radius: 14px; }
+            .products-grid { gap: 24px; }
+            .zoom-hint { width: 30px; height: 30px; top: 8px; right: 8px; }
+            .lightbox-prev, .lightbox-next { top: auto; bottom: 12px; transform: none; }
+            .lightbox-count { bottom: 26px; }
             * { cursor: auto; }
             .cursor-dot, .cursor-ring { display: none; }
             .hero-deco-img { width: 80%; max-width: 300px; }
@@ -1051,6 +1125,19 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Product 8 -->
+            <div class="product-card reveal" data-hover>
+                <img class="product-img" src="img/postventa-s24-ultra.png" alt="Galaxy S24 Ultra sellado de Nexus Import" loading="lazy">
+                <div class="product-body">
+                    <div class="product-brand">SAMSUNG</div>
+                    <div class="product-name">Galaxy S24 Ultra sellado, listo para entrega</div>
+                    <div class="product-price">
+                        <div class="product-price-val">Consultar</div>
+                        <div class="product-badge">SELLADO</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1132,7 +1219,13 @@
             <div class="section-count reveal">(Resultados Verificados)</div>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 justify-items-center">
+        <div class="imports-grid">
+            <div class="import-banner-container reveal" data-hover>
+                <img src="img/galaxy-s24-ultra.jpg"
+                     alt="Galaxy S24 Ultra en camino"
+                     class="import-banner-img" loading="lazy">
+            </div>
+
             <div class="import-banner-container reveal" data-hover>
                 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhSGcIBynjVmAvRPidfVHhJ5TmAbVyMRH_ZVJRsAzwrMAZ_K0FNn-lCessmHgmdHQjx8_OHHmp1CYvlKXKIYDZUODFjiNKOXVFxOUudT1JUcJo-nbXTdrK10vJjICn0gRQDXtHN6EsMblUwBnCmNgHxWHtSd1117G90D67bXQ5T46LgeYlIw2Xc1vEwcxY/s767/Captura%20de%20pantalla%202026-08-30%20215434.png" 
                      alt="Últimas Importaciones 1" 
@@ -1620,6 +1713,99 @@
         carousel.addEventListener('mouseleave', () => {
             carouselTimer = setInterval(nextSlide, slideInterval);
         });
+    </script>
+
+    <!-- LIGHTBOX (zoom de imágenes) -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Imagen ampliada">
+        <button class="lightbox-btn lightbox-close" id="lbClose" aria-label="Cerrar">✕</button>
+        <button class="lightbox-btn lightbox-prev" id="lbPrev" aria-label="Anterior">‹</button>
+        <button class="lightbox-btn lightbox-next" id="lbNext" aria-label="Siguiente">›</button>
+        <div class="lightbox-stage" id="lbStage">
+            <img class="lightbox-img" id="lbImg" alt="">
+        </div>
+        <div class="lightbox-count" id="lbCount"></div>
+    </div>
+    <script>
+    (function () {
+        const imgs = Array.from(document.querySelectorAll('.product-img, .import-banner-img'));
+        const lb = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lbImg');
+        const lbCount = document.getElementById('lbCount');
+        const stage = document.getElementById('lbStage');
+        const icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>';
+        let idx = 0, zoom = 1, tx = 0, ty = 0;
+
+        imgs.forEach((img, i) => {
+            const box = img.parentElement;
+            if (getComputedStyle(box).position === 'static') box.style.position = 'relative';
+            const hint = document.createElement('span');
+            hint.className = 'zoom-hint'; hint.innerHTML = icon;
+            box.appendChild(hint);
+            img.addEventListener('click', (e) => { e.preventDefault(); open(i); });
+        });
+
+        function apply() { lbImg.style.transform = `translate(${tx}px, ${ty}px) scale(${zoom})`; }
+        function reset() { zoom = 1; tx = 0; ty = 0; lb.classList.remove('zoomed'); lbImg.style.transform = ''; }
+        function show(i) {
+            idx = (i + imgs.length) % imgs.length;
+            reset();
+            lbImg.src = imgs[idx].currentSrc || imgs[idx].src;
+            lbImg.alt = imgs[idx].alt || '';
+            lbCount.textContent = (idx + 1) + ' / ' + imgs.length;
+        }
+        function open(i) { show(i); lb.classList.add('open'); document.body.classList.add('lb-open'); }
+        function close() { lb.classList.remove('open'); document.body.classList.remove('lb-open'); reset(); }
+
+        document.getElementById('lbClose').onclick = close;
+        document.getElementById('lbPrev').onclick = (e) => { e.stopPropagation(); show(idx - 1); };
+        document.getElementById('lbNext').onclick = (e) => { e.stopPropagation(); show(idx + 1); };
+        stage.addEventListener('click', (e) => { if (e.target === stage) close(); });
+
+        // Clic / doble toque en la imagen: acercar 2.5x en ese punto o alejar
+        lbImg.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (moved) { moved = false; return; }
+            if (zoom > 1) { reset(); return; }
+            const r = lbImg.getBoundingClientRect();
+            zoom = 2.5;
+            tx = (r.left + r.width / 2 - e.clientX) * (zoom - 1);
+            ty = (r.top + r.height / 2 - e.clientY) * (zoom - 1);
+            lb.classList.add('zoomed'); apply();
+        });
+
+        // Arrastrar cuando está ampliada / deslizar para cambiar
+        let sx = 0, sy = 0, ox = 0, oy = 0, dragging = false, moved = false;
+        lbImg.addEventListener('pointerdown', (e) => {
+            dragging = true; moved = false; sx = e.clientX; sy = e.clientY; ox = tx; oy = ty;
+            lbImg.setPointerCapture(e.pointerId);
+        });
+        lbImg.addEventListener('pointermove', (e) => {
+            if (!dragging) return;
+            const dx = e.clientX - sx, dy = e.clientY - sy;
+            if (Math.abs(dx) > 6 || Math.abs(dy) > 6) moved = true;
+            if (zoom > 1) { tx = ox + dx; ty = oy + dy; apply(); }
+        });
+        lbImg.addEventListener('pointerup', (e) => {
+            dragging = false;
+            const dx = e.clientX - sx;
+            if (zoom === 1 && Math.abs(dx) > 60) { show(idx + (dx < 0 ? 1 : -1)); moved = true; }
+        });
+
+        // Rueda del ratón para zoom
+        lbImg.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            zoom = Math.min(4, Math.max(1, zoom - e.deltaY * 0.002));
+            if (zoom === 1) { tx = 0; ty = 0; lb.classList.remove('zoomed'); } else lb.classList.add('zoomed');
+            apply();
+        }, { passive: false });
+
+        document.addEventListener('keydown', (e) => {
+            if (!lb.classList.contains('open')) return;
+            if (e.key === 'Escape') close();
+            if (e.key === 'ArrowRight') show(idx + 1);
+            if (e.key === 'ArrowLeft') show(idx - 1);
+        });
+    })();
     </script>
 </body>
 </html>
