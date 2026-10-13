@@ -979,6 +979,144 @@
             .carousel-wrapper { padding: 80px 20px; }
             .scroll-to-top-btn { width: 50px; height: 50px; bottom: 24px; }
         }
+
+        /* ===== Efecto vidrio estilo iOS ===== */
+        :root {
+            --glass-bg: rgba(255,255,255,0.07);
+            --glass-bg-strong: rgba(255,255,255,0.12);
+            --glass-border: rgba(255,255,255,0.18);
+            --glass-shine: inset 0 1px 0 rgba(255,255,255,0.28), inset 0 -1px 0 rgba(255,255,255,0.04);
+            --glass-shadow: 0 10px 34px rgba(0,0,0,0.38);
+            --glass-blur: blur(22px) saturate(180%);
+        }
+        /* Luces de fondo para que el vidrio se note */
+        body::before {
+            content: ''; position: fixed; inset: -10%; z-index: -1; pointer-events: none;
+            background:
+                radial-gradient(38% 30% at 12% 18%, rgba(200,255,0,0.10), transparent 70%),
+                radial-gradient(34% 28% at 88% 32%, rgba(0,229,255,0.10), transparent 70%),
+                radial-gradient(40% 32% at 30% 78%, rgba(31,99,181,0.16), transparent 70%),
+                radial-gradient(30% 26% at 85% 88%, rgba(243,154,30,0.08), transparent 70%);
+        }
+        .recent-imports-section { background: transparent; }
+
+        /* Barras y menús */
+        .nav-bar {
+            background: rgba(12,12,14,0.42);
+            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid rgba(255,255,255,0.10);
+            box-shadow: inset 0 -1px 0 rgba(255,255,255,0.04);
+        }
+        .brand-band {
+            background: linear-gradient(180deg, #ffffff, #eef3fa);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
+        }
+        .brand-menu {
+            background: rgba(16,26,52,0.62);
+            -webkit-backdrop-filter: blur(30px) saturate(190%); backdrop-filter: blur(30px) saturate(190%);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shine), 0 24px 60px rgba(0,0,0,0.45);
+            border-radius: 20px;
+        }
+        .brand-menu a { border-radius: 12px; }
+        .brand-menu a:hover { background: rgba(255,255,255,0.10); }
+        .brand-menu a.menu-cta {
+            background: rgba(200,255,0,0.85); color: #000;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 6px 18px rgba(200,255,0,0.25);
+        }
+
+        /* Botones */
+        .btn-outline, .nav-cta {
+            background: var(--glass-bg);
+            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shine), var(--glass-shadow);
+        }
+        .nav-cta { border-color: rgba(200,255,0,0.55); }
+        .btn-outline:hover, .nav-cta:hover { background: var(--glass-bg-strong); }
+        .nav-cta:hover { background: rgba(200,255,0,0.85); }
+        .btn-primary {
+            background: rgba(200,255,0,0.82);
+            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            border: 1px solid rgba(255,255,255,0.45);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.65), inset 0 -2px 6px rgba(0,0,0,0.08), 0 10px 30px rgba(200,255,0,0.25);
+        }
+        .scroll-to-top-btn {
+            background: rgba(20,20,22,0.45);
+            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            border: 1px solid rgba(200,255,0,0.55);
+            box-shadow: var(--glass-shine), 0 8px 26px rgba(0,0,0,0.4), 0 0 20px rgba(200,255,0,0.15);
+        }
+        .whatsapp-float {
+            background: rgba(37,211,102,0.82);
+            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.55), 0 8px 26px rgba(37,211,102,0.35);
+        }
+        .lightbox-btn {
+            background: rgba(255,255,255,0.10);
+            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shine);
+        }
+
+        /* Títulos */
+        .section-header {
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 28px;
+            padding: 32px 36px;
+            box-shadow: var(--glass-shine), var(--glass-shadow);
+            margin-bottom: 56px;
+        }
+        .section-label, .hero-badge {
+            display: inline-flex; align-items: center;
+            padding: 7px 16px; border-radius: 100px;
+            background: rgba(200,255,0,0.08);
+            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            border: 1px solid rgba(200,255,0,0.28);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+        }
+        .section-count {
+            padding: 6px 14px; border-radius: 100px;
+            background: var(--glass-bg); border: 1px solid rgba(255,255,255,0.10);
+        }
+        .carousel-caption {
+            left: 16px; right: 16px; bottom: 16px; border-radius: 20px;
+            background: rgba(10,10,12,0.38);
+            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shine), var(--glass-shadow);
+            padding: 1.4rem 1.6rem;
+        }
+
+        /* Tarjetas e insignias */
+        .product-card, .brand-card, .import-banner-container {
+            background: linear-gradient(160deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: var(--glass-shine), var(--glass-shadow);
+        }
+        .product-body {
+            background: rgba(255,255,255,0.03);
+            -webkit-backdrop-filter: blur(14px) saturate(160%); backdrop-filter: blur(14px) saturate(160%);
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .product-img { background: rgba(0,0,0,0.25); }
+        .product-badge {
+            background: rgba(200,255,0,0.10);
+            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            border: 1px solid rgba(200,255,0,0.30);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+            padding: 5px 12px;
+        }
+        @media (max-width: 768px) {
+            .section-header { padding: 22px 20px; border-radius: 22px; margin-bottom: 36px; }
+            .carousel-caption { left: 10px; right: 10px; bottom: 10px; padding: 1rem 1.1rem; }
+        }
+        @media (prefers-reduced-transparency: reduce) {
+            .nav-bar, .brand-menu, .carousel-caption { background: rgba(12,14,20,0.95); }
+        }
     </style>
 </head>
 <body>
