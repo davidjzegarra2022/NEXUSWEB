@@ -832,6 +832,82 @@
             fill: none;
         }
 
+
+        /* ===== Encabezado de marca (estilo tienda) ===== */
+        .site-header { position: relative; z-index: 1001; font-family: 'Space Grotesk', sans-serif; }
+        .ship-strip {
+            position: relative; overflow: hidden;
+            background:
+                repeating-linear-gradient(0deg, rgba(40,90,170,0.10) 0 1px, transparent 1px 22px),
+                repeating-linear-gradient(90deg, rgba(40,90,170,0.10) 0 1px, transparent 1px 22px),
+                linear-gradient(90deg, #dce9f7, #f4f8fd 30%, #f4f8fd 70%, #dce9f7);
+            color: #14306b; text-align: center;
+            padding: 9px 16px; font-weight: 700; font-size: 1rem;
+            display: flex; align-items: center; justify-content: center; gap: 18px;
+            border-bottom: 1px solid rgba(20,48,107,0.12);
+        }
+        .ship-strip em {
+            font-family: 'Georgia', serif; font-style: italic; font-weight: 700;
+            color: #e8771f; font-size: 1.12em; letter-spacing: 0.2px;
+        }
+        .ship-strip svg { width: 34px; height: 22px; flex: 0 0 auto; }
+        .brand-band {
+            position: relative;
+            background: linear-gradient(180deg, #ffffff 0%, #f3f6fa 100%);
+            padding: 26px 48px 22px;
+            display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 32px;
+        }
+        .brand-band::after {
+            content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 4px;
+            background: linear-gradient(90deg, #6cbf3c, #1f63b5 45%, #f39a1e);
+        }
+        .brand-main { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; text-decoration: none; }
+        .brand-logo { display: block; width: clamp(220px, 34vw, 420px); height: auto; }
+        .brand-tag { margin-top: 6px; padding-left: 12%; color: #14306b; line-height: 1.35; }
+        .brand-tag strong { font-size: clamp(0.82rem, 1.4vw, 1.05rem); font-weight: 700; display: block; }
+        .brand-tag strong u { text-decoration: none; background: linear-gradient(transparent 82%, #f39a1e 82%); }
+        .brand-tag span { display: block; padding-left: 18%; font-size: clamp(0.78rem, 1.2vw, 0.95rem); font-weight: 600; color: #3a5486; }
+        .brand-marcas { justify-self: end; width: clamp(150px, 20vw, 260px); height: auto; opacity: 0.95; }
+        .menu-toggle {
+            width: 52px; height: 44px; border: 0; background: transparent; padding: 8px;
+            display: flex; flex-direction: column; justify-content: space-between; cursor: pointer;
+        }
+        .menu-toggle span { display: block; height: 4px; border-radius: 2px; background: #14306b; transition: transform .3s, opacity .3s; }
+        .menu-toggle.open span:nth-child(1) { transform: translateY(12px) rotate(45deg); }
+        .menu-toggle.open span:nth-child(2) { opacity: 0; }
+        .menu-toggle.open span:nth-child(3) { transform: translateY(-12px) rotate(-45deg); }
+        .brand-menu {
+            position: absolute; top: 100%; right: 16px; z-index: 1002;
+            width: min(300px, calc(100vw - 32px));
+            background: #0f1d3a; border: 1px solid rgba(200,255,0,0.25); border-radius: 14px;
+            padding: 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+            opacity: 0; transform: translateY(-8px); visibility: hidden;
+            transition: opacity .25s, transform .25s, visibility .25s;
+        }
+        .brand-menu.open { opacity: 1; transform: translateY(0); visibility: visible; }
+        .brand-menu a {
+            display: block; padding: 14px 16px; border-radius: 10px;
+            color: #fff; text-decoration: none; font-size: 0.95rem; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .brand-menu a:hover { background: rgba(255,255,255,0.06); color: var(--accent); }
+        .brand-menu a.menu-cta { margin-top: 6px; background: var(--accent); color: #000; text-align: center; font-weight: 700; }
+        .nav-bar { transition: opacity .3s; }
+        .nav-bar.nav-hidden { opacity: 0; pointer-events: none; }
+        .hero { padding-top: 90px; }
+        @media (max-width: 768px) {
+            .ship-strip { font-size: 0.8rem; gap: 10px; padding: 8px 10px; }
+            .ship-strip svg { width: 26px; height: 17px; }
+            .ship-strip { font-size: 0.74rem; white-space: nowrap; }
+            .brand-band { grid-template-columns: 1fr auto; padding: 16px 16px 18px; gap: 6px 10px; }
+            .brand-main { grid-column: 1; grid-row: 1; }
+            .menu-toggle { grid-column: 2; grid-row: 1; width: 46px; align-self: center; }
+            .brand-logo { width: min(66vw, 300px); }
+            .brand-tag { padding-left: 8%; margin-top: 2px; }
+            .brand-tag strong { font-size: 0.74rem; }
+            .brand-tag span { font-size: 0.72rem; }
+            .brand-marcas { grid-column: 1 / -1; grid-row: 2; justify-self: center; width: min(46vw, 190px); margin-top: 4px; }
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .hero-deco-img { width: 60%; max-width: 400px; }
@@ -889,7 +965,34 @@
     <div class="cursor-dot" id="cursorDot"></div>
     <div class="cursor-ring" id="cursorRing"></div>
 
-    <nav class="nav-bar" id="navbar">
+    <header class="site-header" id="siteHeader">
+        <div class="ship-strip">
+            <svg viewBox="0 0 34 22" aria-hidden="true" style="transform:scaleX(-1)"><path d="M2 12l7-1 6-8h3l-3 8 9-1 3-3h2l-2 5 2 5h-2l-3-3-9-1 3 8h-3l-6-8-7-1z" fill="#1f63b5"/></svg>
+            <span>Importamos de EE.UU. · <em>envíos</em> a todo el Perú</span>
+            <svg viewBox="0 0 34 22" aria-hidden="true"><rect x="1" y="4" width="20" height="12" rx="2" fill="#fff" stroke="#14306b" stroke-width="1.3"/><path d="M21 8h6l4 4v4H21z" fill="#fff" stroke="#14306b" stroke-width="1.3"/><rect x="4" y="7" width="10" height="3" rx="1" fill="#6cbf3c"/><circle cx="8" cy="17" r="2.6" fill="#14306b"/><circle cx="26" cy="17" r="2.6" fill="#14306b"/></svg>
+        </div>
+        <div class="brand-band">
+            <a href="#hero" class="brand-main" aria-label="Nexus Import - inicio">
+                <img class="brand-logo" src="img/nexus-logo.png" alt="Nexus Import" width="927" height="386">
+                <div class="brand-tag">
+                    <strong>Lo <u>mejor</u> en Celulares, Laptops &amp; Accesorios</strong>
+                    <span>....solo las mejores marcas</span>
+                </div>
+            </a>
+            <img class="brand-marcas" src="img/nexus-marcas.png" alt="Apple, Xiaomi, Google, Samsung, Huawei, Poco" width="806" height="392">
+            <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="brandMenu"><span></span><span></span><span></span></button>
+            <nav class="brand-menu" id="brandMenu" aria-label="Menú principal">
+                <a href="#marcas">Marcas</a>
+                <a href="#productos">Historial de ventas</a>
+                <a href="#ultimas-importaciones">Últimas importaciones</a>
+                <a href="#servicios">Servicios</a>
+                <a href="#proceso">Proceso</a>
+                <a class="menu-cta" href="https://api.whatsapp.com/send?phone=51962029292&amp;text=Hola%20vi%20tu%20pagina%20web%20y%20me%20gustar%C3%ADa%20cotizar%20un%20modelo" target="_blank" rel="noopener">Cotizar ahora</a>
+            </nav>
+        </div>
+    </header>
+
+    <nav class="nav-bar nav-hidden" id="navbar">
         <div class="nav-logo magnetic">Nexus<span>.</span>Import</div>
         <ul class="nav-links">
             <li><a href="#marcas" class="magnetic">Marcas</a></li>
@@ -1223,6 +1326,12 @@
             <div class="import-banner-container reveal" data-hover>
                 <img src="img/galaxy-s24-ultra.jpg"
                      alt="Galaxy S24 Ultra en camino"
+                     class="import-banner-img" loading="lazy">
+            </div>
+
+            <div class="import-banner-container reveal" data-hover>
+                <img src="img/lenovo-yoga-7i.jpg"
+                     alt="Lenovo Yoga 7i en camino"
                      class="import-banner-img" loading="lazy">
             </div>
 
@@ -1608,6 +1717,7 @@
 
         let lastScroll = 0;
         const navbar = document.getElementById('navbar');
+        const siteHeader = document.getElementById('siteHeader');
         const scrollToTopBtn = document.getElementById('scrollToTopBtn');
         const flashOverlay = document.getElementById('flashOverlay');
 
@@ -1615,7 +1725,10 @@
             const currentScroll = window.pageYOffset;
             
             // Navbar hide/show
-            if (currentScroll > lastScroll && currentScroll > 100) gsap.to(navbar, { y: -100, duration: 0.3 });
+            const headerBottom = siteHeader ? siteHeader.offsetHeight : 0;
+            if (currentScroll < headerBottom) navbar.classList.add('nav-hidden');
+            else navbar.classList.remove('nav-hidden');
+            if (currentScroll > lastScroll && currentScroll > headerBottom + 100) gsap.to(navbar, { y: -100, duration: 0.3 });
             else gsap.to(navbar, { y: 0, duration: 0.3 });
             
             // Show/Hide Scroll to Top Button
@@ -1713,6 +1826,19 @@
         carousel.addEventListener('mouseleave', () => {
             carouselTimer = setInterval(nextSlide, slideInterval);
         });
+    </script>
+
+    <script>
+    (function () {
+        const btn = document.getElementById('menuToggle');
+        const menu = document.getElementById('brandMenu');
+        if (!btn || !menu) return;
+        function setOpen(o) { menu.classList.toggle('open', o); btn.classList.toggle('open', o); btn.setAttribute('aria-expanded', o); }
+        btn.addEventListener('click', (e) => { e.stopPropagation(); setOpen(!menu.classList.contains('open')); });
+        menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setOpen(false)));
+        document.addEventListener('click', (e) => { if (!menu.contains(e.target)) setOpen(false); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+    })();
     </script>
 
     <!-- LIGHTBOX (zoom de imágenes) -->
