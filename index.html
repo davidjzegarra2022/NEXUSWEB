@@ -1122,6 +1122,70 @@
         @media (prefers-reduced-transparency: reduce) {
             .nav-bar, .brand-menu, .carousel-caption { background: rgba(12,14,20,0.95); }
         }
+
+        /* ===== Carrusel deslizable: texto al pie de la imagen ===== */
+        .carousel-container { position: relative; }
+        .carousel {
+            position: relative; height: auto; overflow-x: auto; overflow-y: hidden;
+            display: flex; gap: 20px; border-radius: 0; box-shadow: none;
+            scroll-snap-type: x mandatory; scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain;
+            scrollbar-width: none; padding: 4px calc((100% - min(100%, 860px)) / 2) 10px;
+        }
+        .carousel::-webkit-scrollbar { display: none; }
+        .carousel-slide {
+            position: relative; flex: 0 0 min(100%, 860px); width: auto; height: auto;
+            opacity: 1; scroll-snap-align: center; scroll-snap-stop: always;
+            display: flex; flex-direction: column;
+            border-radius: 24px; overflow: hidden;
+            background: linear-gradient(160deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: var(--glass-shine), var(--glass-shadow);
+            transform: scale(0.94); filter: brightness(0.55);
+            transition: transform .5s cubic-bezier(.25,.46,.45,.94), filter .5s;
+        }
+        .carousel-slide.active { transform: scale(1); filter: none; }
+        .carousel-slide img {
+            width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover;
+            display: block; background: #0b0b0b; cursor: grab;
+        }
+        .carousel-caption {
+            position: static; inset: auto; border-radius: 0; border: 0;
+            border-top: 1px solid rgba(255,255,255,0.10);
+            background: rgba(255,255,255,0.04);
+            -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none;
+            padding: 22px 26px 26px; flex: 1;
+        }
+        .carousel-caption h2 { font-size: clamp(1.15rem, 2.4vw, 1.8rem); line-height: 1.2; margin-bottom: 8px; }
+        .carousel-caption p { font-size: clamp(0.92rem, 1.4vw, 1.05rem); line-height: 1.55; color: rgba(255,255,255,0.78); opacity: 1; }
+        .carousel-caption > * { transform: translateY(10px); opacity: 0; transition: transform .6s ease .15s, opacity .6s ease .15s; }
+        .carousel-slide.active .carousel-caption > * { transform: none; opacity: 1; }
+        .carousel-nav { position: absolute; inset: 0 0 auto 0; pointer-events: none; }
+        .carousel-arrow {
+            position: absolute; top: 0; pointer-events: auto;
+            width: 52px; height: 52px; border-radius: 50%; font-size: 28px; line-height: 1;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            color: #fff; background: rgba(15,15,18,0.45);
+            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border); box-shadow: var(--glass-shine);
+            transition: background .3s, color .3s;
+        }
+        .carousel-arrow:hover { background: var(--accent); color: #000; }
+        #carPrev { left: 12px; } #carNext { right: 12px; }
+        .carousel-indicators { margin-top: 18px; }
+        .indicator { background-color: rgba(255,255,255,0.3); }
+        .indicator.active { width: 28px; border-radius: 6px; transform: none; }
+        @media (max-width: 768px) {
+            .carousel { gap: 12px; padding: 4px 7% 8px; }
+            .carousel-slide { flex-basis: 86%; border-radius: 20px; }
+            .carousel-slide img { aspect-ratio: 4 / 3; }
+            .carousel-caption { padding: 16px 18px 20px; }
+            .carousel-arrow { display: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .carousel { scroll-behavior: auto; }
+            .carousel-slide, .carousel-caption > * { transition: none; }
+        }
     </style>
 </head>
 <body>
@@ -1604,6 +1668,10 @@
                 </div>
             </div>
             
+            <div class="carousel-nav">
+                <button class="carousel-arrow" id="carPrev" aria-label="Anterior">‹</button>
+                <button class="carousel-arrow" id="carNext" aria-label="Siguiente">›</button>
+            </div>
             <!-- Indicadores -->
             <div class="carousel-indicators">
                 <div class="indicator active" data-slide="0"></div>
@@ -1958,47 +2026,64 @@
             gsap.to(particle, { y: -200 - Math.random() * 300, x: (Math.random() - 0.5) * 200, opacity: 0, duration: 3 + Math.random() * 4, repeat: -1, delay: Math.random() * 3, ease: 'power1.out' });
         }
 
-        // Carousel Script
-        const slides = document.querySelectorAll('.carousel-slide');
-        const indicators = document.querySelectorAll('.indicator');
-        let currentSlide = 0;
-        const slideInterval = 8000; // 8 segundos
-
-        // Función para mostrar una diapositiva específica
-        function showSlide(index) {
-            slides.forEach(slide => slide.classList.remove('active'));
-            indicators.forEach(indicator => indicator.classList.remove('active'));
-            
-            slides[index].classList.add('active');
-            indicators[index].classList.add('active');
-            
-            currentSlide = index;
-        }
-
-        // Función para avanzar al siguiente slide
-        function nextSlide() {
-            const nextIndex = (currentSlide + 1) % slides.length;
-            showSlide(nextIndex);
-        }
-
-        // Iniciar el carrusel automático
-        let carouselTimer = setInterval(nextSlide, slideInterval);
-
-        // Eventos de clic en indicadores
-        indicators.forEach((indicator, index) => {
-            indicator.addEventListener('click', () => {
-                clearInterval(carouselTimer);
-                showSlide(index);
-                carouselTimer = setInterval(nextSlide, slideInterval);
-            });
-        });
-
-        // Pausar al pasar el mouse
+        // Carousel Script (deslizable)
         const carousel = document.querySelector('.carousel');
-        carousel.addEventListener('mouseenter', () => clearInterval(carouselTimer));
-        carousel.addEventListener('mouseleave', () => {
-            carouselTimer = setInterval(nextSlide, slideInterval);
-        });
+        const slides = [...document.querySelectorAll('.carousel-slide')];
+        const indicators = [...document.querySelectorAll('.indicator')];
+        const slideInterval = 6000;
+        let currentSlide = 0, carouselTimer = null, scrollRaf = null;
+
+        function setActive(i) {
+            currentSlide = i;
+            slides.forEach((s, k) => s.classList.toggle('active', k === i));
+            indicators.forEach((d, k) => d.classList.toggle('active', k === i));
+        }
+        function goTo(i) {
+            i = (i + slides.length) % slides.length;
+            const s = slides[i];
+            carousel.scrollTo({ left: s.offsetLeft - (carousel.clientWidth - s.offsetWidth) / 2, behavior: 'smooth' });
+            setActive(i);
+        }
+        function nearest() {
+            const c = carousel.scrollLeft + carousel.clientWidth / 2;
+            let best = 0, d = Infinity;
+            slides.forEach((s, k) => { const m = Math.abs(s.offsetLeft + s.offsetWidth / 2 - c); if (m < d) { d = m; best = k; } });
+            return best;
+        }
+        carousel.addEventListener('scroll', () => {
+            cancelAnimationFrame(scrollRaf);
+            scrollRaf = requestAnimationFrame(() => { const n = nearest(); if (n !== currentSlide) setActive(n); });
+        }, { passive: true });
+
+        function startAuto() { stopAuto(); carouselTimer = setInterval(() => goTo(currentSlide + 1), slideInterval); }
+        function stopAuto() { clearInterval(carouselTimer); }
+
+        indicators.forEach((d, k) => d.addEventListener('click', () => { goTo(k); startAuto(); }));
+        document.getElementById('carPrev').addEventListener('click', () => { goTo(currentSlide - 1); startAuto(); });
+        document.getElementById('carNext').addEventListener('click', () => { goTo(currentSlide + 1); startAuto(); });
+        carousel.addEventListener('mouseenter', stopAuto);
+        carousel.addEventListener('mouseleave', startAuto);
+        carousel.addEventListener('touchstart', stopAuto, { passive: true });
+        carousel.addEventListener('touchend', () => setTimeout(startAuto, 2500), { passive: true });
+
+        // Arrastrar con el mouse en computadora
+        let dragX = null, dragLeft = 0;
+        carousel.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; dragX = e.clientX; dragLeft = carousel.scrollLeft; carousel.style.scrollSnapType = 'none'; carousel.style.scrollBehavior = 'auto'; });
+        window.addEventListener('pointermove', e => { if (dragX === null) return; carousel.scrollLeft = dragLeft - (e.clientX - dragX); });
+        window.addEventListener('pointerup', () => { if (dragX === null) return; dragX = null; carousel.style.scrollSnapType = ''; carousel.style.scrollBehavior = ''; goTo(nearest()); });
+        carousel.querySelectorAll('img').forEach(img => img.draggable = false);
+
+        // Flechas centradas sobre la imagen
+        function placeArrows() {
+            const img = slides[0] && slides[0].querySelector('img');
+            if (!img) return;
+            document.querySelectorAll('.carousel-arrow').forEach(a => a.style.top = (carousel.offsetTop + img.offsetHeight / 2 - 26) + 'px');
+        }
+        window.addEventListener('resize', () => { placeArrows(); goTo(currentSlide); });
+        window.addEventListener('load', placeArrows);
+        placeArrows();
+        setActive(0);
+        startAuto();
     </script>
 
     <script>
