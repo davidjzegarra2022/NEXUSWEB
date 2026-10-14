@@ -1122,6 +1122,52 @@
         @media (prefers-reduced-transparency: reduce) {
             .nav-bar, .brand-menu, .carousel-caption { background: rgba(12,14,20,0.95); }
         }
+
+        /* Logo blanco en la barra superior */
+        .nav-logo { display: flex; align-items: center; text-decoration: none; }
+        .nav-logo-img { display: block; height: 48px; width: auto; }
+
+        /* Carrusel: texto al pie de la imagen (mismo efecto de desvanecido) */
+        .carousel {
+            display: grid; height: auto; overflow: hidden;
+            max-width: 900px; margin: 0 auto;
+            border-radius: 20px;
+            background: linear-gradient(160deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: var(--glass-shine), var(--glass-shadow);
+        }
+        .carousel-slide {
+            position: relative; grid-area: 1 / 1; width: 100%; height: auto;
+            display: flex; flex-direction: column;
+            pointer-events: none;
+        }
+        .carousel-slide.active { pointer-events: auto; }
+        .carousel-slide img {
+            width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block;
+        }
+        .carousel-caption {
+            position: static; inset: auto; left: auto; right: auto; bottom: auto;
+            border: 0; border-radius: 0; box-shadow: none;
+            -webkit-backdrop-filter: none; backdrop-filter: none;
+            background: rgba(10,10,12,0.92);
+            border-top: 1px solid rgba(200,255,0,0.25);
+            padding: 22px 28px 26px; flex: 1;
+        }
+        .carousel-caption h2 {
+            font-size: clamp(1.15rem, 2.4vw, 1.8rem); line-height: 1.25;
+            margin-bottom: 8px; color: #fff;
+        }
+        .carousel-caption p {
+            font-size: clamp(0.95rem, 1.4vw, 1.08rem); line-height: 1.55;
+            color: rgba(255,255,255,0.82); opacity: 1;
+        }
+        @media (max-width: 768px) {
+            .nav-logo-img { height: 40px; }
+            .carousel { height: auto; border-radius: 18px; }
+            .carousel-slide img { aspect-ratio: 4 / 3; }
+            .carousel-caption { left: auto; right: auto; bottom: auto; padding: 16px 18px 20px; }
+            .carousel-caption h2 { font-size: 1.15rem; }
+        }
     </style>
 </head>
 <body>
@@ -1167,7 +1213,7 @@
     </header>
 
     <nav class="nav-bar nav-hidden" id="navbar">
-        <div class="nav-logo magnetic">Nexus<span>.</span>Import</div>
+        <a href="#hero" class="nav-logo magnetic" aria-label="Nexus Import - inicio"><img class="nav-logo-img" src="img/nexus-logo-blanco.png" alt="Nexus Import" width="960" height="394"></a>
         <ul class="nav-links">
             <li><a href="#marcas" class="magnetic">Marcas</a></li>
             <li><a href="#productos" class="magnetic">Productos</a></li>
